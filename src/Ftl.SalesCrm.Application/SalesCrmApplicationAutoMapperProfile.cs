@@ -12,5 +12,6 @@ public class SalesCrmApplicationAutoMapperProfile : Profile
          * into multiple profile classes for a better organization. */
         CreateMap<Contact, ContactDto>();
         CreateMap<CreateUpdateContactDto, Contact>();
+        CreateMap<ContactDto, CreateUpdateContactDto>();
     }
 }

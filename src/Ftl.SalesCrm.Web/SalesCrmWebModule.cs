@@ -37,6 +37,8 @@ using Volo.Abp.UI.Navigation.Urls;
 using Volo.Abp.UI;
 using Volo.Abp.UI.Navigation;
 using Volo.Abp.VirtualFileSystem;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Ftl.SalesCrm.Permissions;
 
 namespace Ftl.SalesCrm.Web;
 
@@ -93,6 +95,13 @@ public class SalesCrmWebModule : AbpModule
         ConfigureNavigationServices();
         ConfigureAutoApiControllers();
         ConfigureSwaggerServices(context.Services);
+
+        Configure<RazorPagesOptions>(options =>
+        {
+            options.Conventions.AuthorizePage("/Contacts/Index", SalesCrmPermissions.Contacts.Default);
+            options.Conventions.AuthorizePage("/Contacts/CreateModal", SalesCrmPermissions.Contacts.Create);
+            options.Conventions.AuthorizePage("/Contacts/EditModal", SalesCrmPermissions.Contacts.Edit);
+        });
     }
 
     private void ConfigureAuthentication(ServiceConfigurationContext context)

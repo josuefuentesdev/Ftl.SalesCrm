@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Ftl.SalesCrm.Permissions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,6 +21,11 @@ namespace Ftl.SalesCrm.Contacts
     {
         public ContactAppService(IRepository<Contact, int> repository) : base(repository)
         {
+            GetPolicyName = SalesCrmPermissions.Contacts.Default;
+            GetListPolicyName = SalesCrmPermissions.Contacts.Default;
+            CreatePolicyName = SalesCrmPermissions.Contacts.Create;
+            UpdatePolicyName = SalesCrmPermissions.Contacts.Edit;
+            DeletePolicyName = SalesCrmPermissions.Contacts.Delete;
         }
     }
 }

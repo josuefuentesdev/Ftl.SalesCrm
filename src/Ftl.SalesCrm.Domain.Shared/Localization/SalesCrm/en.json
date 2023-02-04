@@ -3,6 +3,12 @@
   "texts": {
     "Menu:Home": "Home",
     "Welcome": "Welcome",
-    "LongWelcomeMessage": "Welcome to the application. This is a startup project based on the ABP framework. For more information, visit abp.io."
+    "LongWelcomeMessage": "Welcome to the application. This is a startup project based on the ABP framework. For more information, visit abp.io.",
+    "Menu:Contacts": "Contacts",
+    "Permission:SalesCrm": "Sales Crm",
+    "Permission:Contacts": "Contact Management",
+    "Permission:Contacts.Create": "Creating new contacts",
+    "Permission:Contacts.Edit": "Editing the contacts",
+    "Permission:Contacts.Delete": "Deleting the contacts"
   }
 }

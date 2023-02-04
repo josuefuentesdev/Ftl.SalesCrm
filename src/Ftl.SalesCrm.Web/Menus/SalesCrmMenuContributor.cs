@@ -1,6 +1,8 @@
 ﻿using System.Threading.Tasks;
 using Ftl.SalesCrm.Localization;
 using Ftl.SalesCrm.MultiTenancy;
+using Ftl.SalesCrm.Permissions;
+using Volo.Abp.Authorization.Permissions;
 using Volo.Abp.Identity.Web.Navigation;
 using Volo.Abp.SettingManagement.Web.Navigation;
 using Volo.Abp.TenantManagement.Web.Navigation;
@@ -33,6 +35,24 @@ public class SalesCrmMenuContributor : IMenuContributor
                 order: 0
             )
         );
+
+        context.Menu.AddItem(
+            new ApplicationMenuItem(
+                "Contacts",
+                    l["Menu:Contacts"],
+                    icon: "fas fa-address-book"
+                ).AddItem(
+                new ApplicationMenuItem(
+                        "Contacts.Contacts",
+                        l["Menu:Contacts"],
+                        url: "/Contacts"
+                    ).RequirePermissions(SalesCrmPermissions.Contacts.Default)
+                )
+           );
+
+
+
+
 
         if (MultiTenancyConsts.IsEnabled)
         {
