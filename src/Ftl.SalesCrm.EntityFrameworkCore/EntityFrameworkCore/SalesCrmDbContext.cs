@@ -1,9 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Ftl.SalesCrm.Contacts;
+using Microsoft.EntityFrameworkCore;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
 using Volo.Abp.BackgroundJobs.EntityFrameworkCore;
 using Volo.Abp.Data;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.EntityFrameworkCore;
+using Volo.Abp.EntityFrameworkCore.Modeling;
 using Volo.Abp.FeatureManagement.EntityFrameworkCore;
 using Volo.Abp.Identity;
 using Volo.Abp.Identity.EntityFrameworkCore;
@@ -52,6 +54,8 @@ public class SalesCrmDbContext :
 
     #endregion
 
+    public DbSet<Contact> Contacts { get; set; }
+    
     public SalesCrmDbContext(DbContextOptions<SalesCrmDbContext> options)
         : base(options)
     {
@@ -81,5 +85,17 @@ public class SalesCrmDbContext :
         //    b.ConfigureByConvention(); //auto configure for the base class props
         //    //...
         //});
+
+        builder.Entity<Contact>(c =>
+        {
+            c.ToTable(SalesCrmConsts.DbTablePrefix + "Contacts", SalesCrmConsts.DbSchema);
+            c.ConfigureByConvention();
+            c.Property(x => x.Firstname).HasMaxLength(50);
+            c.Property(x => x.Lastname).HasMaxLength(50);
+            c.Property(x => x.Email).HasMaxLength(50);
+            c.Property(x => x.Mobilephone).HasMaxLength(50);
+            c.Property(x => x.Phone).HasMaxLength(50);
+            c.Property(x => x.Lifecyclestage).HasMaxLength(50);
+        });
     }
 }
