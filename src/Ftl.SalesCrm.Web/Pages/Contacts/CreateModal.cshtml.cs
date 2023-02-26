@@ -8,6 +8,7 @@ using Volo.Abp.Identity;
 using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Form;
 using Ftl.SalesCrm.UserInfo;
 using System.Linq;
+using System.ComponentModel.DataAnnotations;
 
 namespace Ftl.SalesCrm.Web.Pages.Contacts
 {
@@ -17,6 +18,7 @@ namespace Ftl.SalesCrm.Web.Pages.Contacts
         public CreateContactViewModel Contact { get; set; }
 
         public List<SelectListItem> UserList { get; set; }
+        public IList<PotentialOwnerUserDto> PotentialOwnerUserList { get; set; }
 
         private readonly IContactAppService _contactService;
 
@@ -27,29 +29,44 @@ namespace Ftl.SalesCrm.Web.Pages.Contacts
 
         public async void OnGet()
         {
-            var potentialOwnerUsers = await _contactService.GetPotentialOwnerUserListAsync();
+            PotentialOwnerUserList = await _contactService.GetPotentialOwnerUserListAsync();
 
-            UserList = potentialOwnerUsers.Select(u => new SelectListItem()
+            UserList = new List<SelectListItem>()
             {
-                Value = u.Id.ToString(),
+                new SelectListItem()
+                {
+                    Value = "",
+                    Text = L["NoOwner"]
+                }
+            };
+            UserList.AddRange(PotentialOwnerUserList.Select(u => new SelectListItem()
+            {
+                Value = u.UserName,
                 Text = u.Name,
-            }).ToList();
+            }).ToList());
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
             var dto = ObjectMapper.Map<CreateContactViewModel, CreateUpdateContactDto>(Contact);
+            if (!String.IsNullOrEmpty(Contact.OwnerUserName))
+            {
+                var potentialUserId = PotentialOwnerUserList.Where(p => p.UserName == Contact.OwnerUserName).FirstOrDefault()?.Id;
+                if (potentialUserId is Guid) dto.OwnerUserId = potentialUserId;
+            }
             await _contactService.CreateAsync(dto);
             return NoContent();
         }
 
         public class CreateContactViewModel
         {
+            [DataType(DataType.EmailAddress)]
             public string Email { get; set; }
             public string Firstname { get; set; }
             public string Lastname { get; set; }
+            [Display(Name = "ContactOwner")]
             [SelectItems(nameof(UserList))]
-            public string UserName { get; set; }
+            public string OwnerUserName { get; set; }
             public string Phone { get; set; }
             public string Lifecyclestage { get; set; }
             // Sales properties

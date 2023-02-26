@@ -9,6 +9,12 @@
     "Permission:Contacts": "Contact Management",
     "Permission:Contacts.Create": "Creating new contacts",
     "Permission:Contacts.Edit": "Editing the contacts",
-    "Permission:Contacts.Delete": "Deleting the contacts"
+    "Permission:Contacts.Delete": "Deleting the contacts",
+    "Firstname": "First name",
+    "Lastname": "Last name",
+    "ContactOwner": "Contact owner",
+    "Phone": "Phone number",
+    "Lifecyclestage": "Lifecycle stage",
+    "Leadstatus": "Lead status"
   }
 }
