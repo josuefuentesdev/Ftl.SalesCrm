@@ -26,9 +26,9 @@ namespace Ftl.SalesCrm
                 await _contactRepository.InsertAsync(
                     new Contact
                     {
-                    Firstname = "John",
-                    Lastname = "Doe",
-                    Email = "jhondoe@gmail.com"
+                        Firstname = "John",
+                        Lastname = "Doe",
+                        Email = "jhondoe@gmail.com",
                     },
                     autoSave: true
                 );
@@ -38,7 +38,7 @@ namespace Ftl.SalesCrm
                     {
                         Firstname = "Juan",
                         Lastname = "Perez",
-                        Email = "jperez@gmail.com"
+                        Email = "jperez@gmail.com",
                     },
                     autoSave: true
                 );

@@ -13,5 +13,7 @@ namespace Ftl.SalesCrm.Contacts
         public string Lifecyclestage { get; set; }
         public string Mobilephone { get; set; }
         public string Phone { get; set; }
+        // Sales properties
+        public Guid OwnerUserId { get; set; }
     }
 }

@@ -90,12 +90,18 @@ public class SalesCrmDbContext :
         {
             c.ToTable(SalesCrmConsts.DbTablePrefix + "Contacts", SalesCrmConsts.DbSchema);
             c.ConfigureByConvention();
+            // Contact information
             c.Property(x => x.Firstname).HasMaxLength(50);
             c.Property(x => x.Lastname).HasMaxLength(50);
             c.Property(x => x.Email).HasMaxLength(50);
             c.Property(x => x.Mobilephone).HasMaxLength(50);
             c.Property(x => x.Phone).HasMaxLength(50);
             c.Property(x => x.Lifecyclestage).HasMaxLength(50);
+            // Sales properties
+            c.Property(x => x.Leadstatus).HasMaxLength(50);
+            c.Property(x => x.Score);
+            c.Property(x => x.OwnerAssigneddate);
+            c.HasOne<IdentityUser>().WithMany().HasForeignKey(x => x.OwnerUserId);
         });
     }
 }

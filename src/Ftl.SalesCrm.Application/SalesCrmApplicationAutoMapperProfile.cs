@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using Ftl.SalesCrm.Contacts;
+using Ftl.SalesCrm.UserInfo;
+using Volo.Abp.Identity;
 
 namespace Ftl.SalesCrm;
 
@@ -13,5 +15,6 @@ public class SalesCrmApplicationAutoMapperProfile : Profile
         CreateMap<Contact, ContactDto>();
         CreateMap<CreateUpdateContactDto, Contact>();
         CreateMap<ContactDto, CreateUpdateContactDto>();
+        CreateMap<IdentityUser, PotentialOwnerUserDto>();
     }
 }
