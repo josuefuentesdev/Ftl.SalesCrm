@@ -1,4 +1,5 @@
 ﻿using Ftl.SalesCrm.Contacts;
+using Ftl.SalesCrm.LeadStatuses;
 using Ftl.SalesCrm.Lifecyclestages;
 using Microsoft.EntityFrameworkCore;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
@@ -57,6 +58,7 @@ public class SalesCrmDbContext :
 
     public DbSet<Contact> Contacts { get; set; }
     public DbSet<Lifecyclestage> Lifecyclestages { get; set; }
+    public DbSet<LeadStatus> LeadStatuses { get; set; }
 
     public SalesCrmDbContext(DbContextOptions<SalesCrmDbContext> options)
         : base(options)
@@ -101,7 +103,7 @@ public class SalesCrmDbContext :
             c.HasOne<Lifecyclestage>().WithMany().HasForeignKey(x => x.LifecyclestageId).IsRequired();
             
             // Sales properties
-            c.Property(x => x.Leadstatus).HasMaxLength(50);
+            c.HasOne<LeadStatus>().WithMany().HasForeignKey(x => x.LeadstatusId).IsRequired();
             c.Property(x => x.Score);
             c.Property(x => x.OwnerAssigneddate);
             c.HasOne<IdentityUser>().WithMany().HasForeignKey(x => x.OwnerUserId);
@@ -113,6 +115,15 @@ public class SalesCrmDbContext :
             c.ConfigureByConvention();
             // Contact information
             c.Property(x => x.Name).HasMaxLength(50);
+        });
+
+        builder.Entity<LeadStatus>(c =>
+        {
+            c.ToTable(SalesCrmConsts.DbTablePrefix + "LeadStatuses", SalesCrmConsts.DbSchema);
+            c.ConfigureByConvention();
+            // Contact information
+            c.Property(x => x.Label).HasMaxLength(50);
+            c.Property(x => x.InternalValue).HasMaxLength(50);
         });
     }
 }

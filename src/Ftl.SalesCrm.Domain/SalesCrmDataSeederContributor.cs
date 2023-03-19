@@ -1,4 +1,5 @@
 ﻿using Ftl.SalesCrm.Contacts;
+using Ftl.SalesCrm.LeadStatuses;
 using Ftl.SalesCrm.Lifecyclestages;
 using System;
 using System.Collections.Generic;
@@ -15,11 +16,13 @@ namespace Ftl.SalesCrm
     {
         private readonly IRepository<Contact, int> _contactRepository;
         private readonly IRepository<Lifecyclestage, Guid> _lifecycleRepository;
+        private readonly IRepository<LeadStatus, Guid> _leadstatusRepository;
 
-        public SalesCrmDataSeederContributor(IRepository<Contact, int> contactRepository, IRepository<Lifecyclestage, Guid> lifecycleRepository)
+        public SalesCrmDataSeederContributor(IRepository<Contact, int> contactRepository, IRepository<Lifecyclestage, Guid> lifecycleRepository, IRepository<LeadStatus, Guid> leadstatusRepository)
         {
             _contactRepository = contactRepository;
             _lifecycleRepository = lifecycleRepository;
+            _leadstatusRepository = leadstatusRepository;
         }
 
         public async Task SeedAsync(DataSeedContext context)
@@ -91,9 +94,86 @@ namespace Ftl.SalesCrm
                     );
             }
 
+            if (await _leadstatusRepository.GetCountAsync() <= 0)
+            {
+                await _leadstatusRepository.InsertAsync(
+                    new LeadStatus
+                    {
+                        Label = "New",
+                        InternalValue = "NEW",
+                    },
+                    autoSave: true
+                );
+
+                await _leadstatusRepository.InsertAsync(
+                    new LeadStatus
+                    {
+                        Label = "Open",
+                        InternalValue = "OPEN",
+                    },
+                    autoSave: true
+                );
+
+                await _leadstatusRepository.InsertAsync(
+                    new LeadStatus
+                    {
+                        Label = "In Progress",
+                        InternalValue = "IN_PROGRESS",
+                    },
+                    autoSave: true
+                );
+
+                await _leadstatusRepository.InsertAsync(
+                    new LeadStatus
+                    {
+                        Label = "Open Deal",
+                        InternalValue = "OPEN_DEAL",
+                    },
+                    autoSave: true
+                );
+
+                await _leadstatusRepository.InsertAsync(
+                    new LeadStatus
+                    {
+                        Label = "Unqualified",
+                        InternalValue = "UNQUALIFIED",
+                    },
+                    autoSave: true
+                );
+
+                await _leadstatusRepository.InsertAsync(
+                    new LeadStatus
+                    {
+                        Label = "Attempted to Contact",
+                        InternalValue = "ATTEMPTED_TO_CONTACT",
+                    },
+                    autoSave: true
+                );
+
+                await _leadstatusRepository.InsertAsync(
+                    new LeadStatus
+                    {
+                        Label = "Connected",
+                        InternalValue = "CONNECTED",
+                    },
+                    autoSave: true
+                );
+
+                await _leadstatusRepository.InsertAsync(
+                    new LeadStatus
+                    {
+                        Label = "Bad Timing",
+                        InternalValue = "BAD_TIMING",
+                    },
+                    autoSave: true
+                );
+            }
+
+
             if (await _contactRepository.GetCountAsync() <= 0)
             {
-                var leadItem = await _lifecycleRepository.FirstOrDefaultAsync(x => x.Name == "Lead");
+                var startLifecyclestatus = await _lifecycleRepository.FirstOrDefaultAsync(x => x.Name == "Lead");
+                var startLeadStatus = await _leadstatusRepository.FirstOrDefaultAsync(x => x.InternalValue == "NEW");
 
                 await _contactRepository.InsertAsync(
                     new Contact
@@ -101,7 +181,8 @@ namespace Ftl.SalesCrm
                         Firstname = "John",
                         Lastname = "Doe",
                         Email = "jhondoe@gmail.com",
-                        LifecyclestageId = leadItem.Id,
+                        LifecyclestageId = startLifecyclestatus.Id,
+                        LeadstatusId = startLeadStatus.Id,
                     },
                     autoSave: true
                 );
@@ -112,7 +193,8 @@ namespace Ftl.SalesCrm
                         Firstname = "Juan",
                         Lastname = "Perez",
                         Email = "jperez@gmail.com",
-                        LifecyclestageId = leadItem.Id,
+                        LifecyclestageId = startLifecyclestatus.Id,
+                        LeadstatusId = startLeadStatus.Id,
                     },
                     autoSave: true
                 );

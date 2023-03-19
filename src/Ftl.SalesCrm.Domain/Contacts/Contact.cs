@@ -17,7 +17,7 @@ namespace Ftl.SalesCrm.Contacts
         public string Phone { get; set; }
 
         // Sales properties
-        public string Leadstatus { get; set; }
+        public Guid LeadstatusId { get; set; }
         public int Score { get; set; }
         public Guid? OwnerUserId { get; set; }
         public DateTime? OwnerAssigneddate { get; set; }

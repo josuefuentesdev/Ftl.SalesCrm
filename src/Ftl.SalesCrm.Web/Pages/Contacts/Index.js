@@ -46,6 +46,10 @@ $(function () {
                     data: "lifecyclestageName"
                 },
                 {
+                    title: l('LeadstatusLabel'),
+                    data: "leadstatusLabel"
+                },
+                {
                     title: l('OwnerUserName'),
                     data: "ownerUserName"
                 },

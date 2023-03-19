@@ -1,4 +1,5 @@
-﻿using Ftl.SalesCrm.Lifecyclestages;
+﻿using Ftl.SalesCrm.LeadStatuses;
+using Ftl.SalesCrm.Lifecyclestages;
 using Ftl.SalesCrm.Permissions;
 using Ftl.SalesCrm.UserInfo;
 using System;
@@ -25,12 +26,14 @@ namespace Ftl.SalesCrm.Contacts
     {
         protected IIdentityUserRepository UserRepository { get; }
         private readonly IRepository<Lifecyclestage, Guid> _lifecyclestageRepository;
+        private readonly IRepository<LeadStatus, Guid> _leadstatusRepository;
 
         public ContactAppService(
             IRepository<Contact, int> repository,
             IIdentityUserRepository userRepository,
             IRepository<Lifecyclestage, Guid> lifecyclestageRepository
-        )
+,
+            IRepository<LeadStatus, Guid> leadstatusRepository)
             : base(repository)
         {
             GetPolicyName = SalesCrmPermissions.Contacts.Default;
@@ -40,6 +43,7 @@ namespace Ftl.SalesCrm.Contacts
             DeletePolicyName = SalesCrmPermissions.Contacts.Delete;
             UserRepository = userRepository;
             _lifecyclestageRepository = lifecyclestageRepository;
+            _leadstatusRepository = leadstatusRepository;
         }
 
         public async Task<IList<PotentialOwnerUserDto>> GetPotentialOwnerUserListAsync()
@@ -60,7 +64,8 @@ namespace Ftl.SalesCrm.Contacts
             //Prepare a query to join contacts and authors
             var query = from contact in queryable
                         join lifecyclestage in await _lifecyclestageRepository.GetQueryableAsync() on contact.LifecyclestageId equals lifecyclestage.Id
-                        select new { contact, lifecyclestage };
+                        join leadstatus in await _leadstatusRepository.GetQueryableAsync() on contact.LeadstatusId equals leadstatus.Id
+                        select new { contact, lifecyclestage, leadstatus };
 
             query = query
                 .OrderBy(NormalizeSorting(input.Sorting))
@@ -75,6 +80,7 @@ namespace Ftl.SalesCrm.Contacts
             {
                 var contactDto = ObjectMapper.Map<Contact, ContactDto>(x.contact);
                 contactDto.LifecyclestageName = x.lifecyclestage.Name;
+                contactDto.LeadstatusLabel = x.leadstatus.Label;
                 return contactDto;
             }).ToList();
 
