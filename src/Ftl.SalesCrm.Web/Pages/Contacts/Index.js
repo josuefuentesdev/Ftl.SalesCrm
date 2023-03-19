@@ -42,8 +42,8 @@ $(function () {
                     }
                 },
                 {
-                    title: l('Lifecyclestage'),
-                    data: "lifecyclestage"
+                    title: l('LifecyclestageName'),
+                    data: "lifecyclestageName"
                 },
                 {
                     title: l('Firstname'),

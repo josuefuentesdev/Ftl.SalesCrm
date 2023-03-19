@@ -1,4 +1,5 @@
 ﻿using Ftl.SalesCrm.Contacts;
+using Ftl.SalesCrm.Lifecyclestages;
 using Microsoft.EntityFrameworkCore;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
 using Volo.Abp.BackgroundJobs.EntityFrameworkCore;
@@ -55,7 +56,8 @@ public class SalesCrmDbContext :
     #endregion
 
     public DbSet<Contact> Contacts { get; set; }
-    
+    public DbSet<Lifecyclestage> Lifecyclestages { get; set; }
+
     public SalesCrmDbContext(DbContextOptions<SalesCrmDbContext> options)
         : base(options)
     {
@@ -96,12 +98,21 @@ public class SalesCrmDbContext :
             c.Property(x => x.Email).HasMaxLength(50);
             c.Property(x => x.Mobilephone).HasMaxLength(50);
             c.Property(x => x.Phone).HasMaxLength(50);
-            c.Property(x => x.Lifecyclestage).HasMaxLength(50);
+            c.HasOne<Lifecyclestage>().WithMany().HasForeignKey(x => x.LifecyclestageId).IsRequired();
+            
             // Sales properties
             c.Property(x => x.Leadstatus).HasMaxLength(50);
             c.Property(x => x.Score);
             c.Property(x => x.OwnerAssigneddate);
             c.HasOne<IdentityUser>().WithMany().HasForeignKey(x => x.OwnerUserId);
+        });
+
+        builder.Entity<Lifecyclestage>(c =>
+        {
+            c.ToTable(SalesCrmConsts.DbTablePrefix + "Lifecyclestages", SalesCrmConsts.DbSchema);
+            c.ConfigureByConvention();
+            // Contact information
+            c.Property(x => x.Name).HasMaxLength(50);
         });
     }
 }

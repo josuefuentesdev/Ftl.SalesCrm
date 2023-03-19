@@ -10,7 +10,8 @@ namespace Ftl.SalesCrm.Contacts
         public string Firstname { get; set; }
         public string Lastname { get; set; }
         public string Email { get; set; }
-        public string Lifecyclestage { get; set; }
+        public Guid LifecyclestageId { get; set; }
+        public string LifecyclestageName { get; set; }
         public string Mobilephone { get; set; }
         public string Phone { get; set; }
         // Sales properties

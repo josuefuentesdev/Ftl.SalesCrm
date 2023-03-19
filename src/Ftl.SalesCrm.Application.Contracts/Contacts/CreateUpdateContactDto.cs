@@ -14,8 +14,7 @@ namespace Ftl.SalesCrm.Contacts
         public string Lastname { get; set; }
         [StringLength(50)]
         public string Email { get; set; }
-        [StringLength(50)]
-        public string Lifecyclestage { get; set; }
+        public Guid LifecyclestageId { get; set; }
         [StringLength(50)]
         public string Mobilephone { get; set; }
         [StringLength(50)]

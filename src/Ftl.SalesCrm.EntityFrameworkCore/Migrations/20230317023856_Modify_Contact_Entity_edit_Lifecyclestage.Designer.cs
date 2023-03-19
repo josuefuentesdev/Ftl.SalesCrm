@@ -4,6 +4,7 @@ using Ftl.SalesCrm.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Volo.Abp.EntityFrameworkCore;
 
@@ -12,9 +13,11 @@ using Volo.Abp.EntityFrameworkCore;
 namespace Ftl.SalesCrm.Migrations
 {
     [DbContext(typeof(SalesCrmDbContext))]
-    partial class SalesCrmDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230317023856_Modify_Contact_Entity_edit_Lifecyclestage")]
+    partial class ModifyContactEntityeditLifecyclestage
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

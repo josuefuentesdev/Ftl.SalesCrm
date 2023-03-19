@@ -4,6 +4,7 @@ using Ftl.SalesCrm.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Volo.Abp.EntityFrameworkCore;
 
@@ -12,9 +13,11 @@ using Volo.Abp.EntityFrameworkCore;
 namespace Ftl.SalesCrm.Migrations
 {
     [DbContext(typeof(SalesCrmDbContext))]
-    partial class SalesCrmDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230317022430_Created_Lifecyclestage_Entity")]
+    partial class CreatedLifecyclestageEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -88,8 +91,9 @@ namespace Ftl.SalesCrm.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<Guid>("LifecyclestageId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("Lifecyclestage")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Mobilephone")
                         .HasMaxLength(50)
@@ -109,8 +113,6 @@ namespace Ftl.SalesCrm.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("LifecyclestageId");
 
                     b.HasIndex("OwnerUserId");
 
@@ -1761,12 +1763,6 @@ namespace Ftl.SalesCrm.Migrations
 
             modelBuilder.Entity("Ftl.SalesCrm.Contacts.Contact", b =>
                 {
-                    b.HasOne("Ftl.SalesCrm.Lifecyclestages.Lifecyclestage", null)
-                        .WithMany()
-                        .HasForeignKey("LifecyclestageId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Volo.Abp.Identity.IdentityUser", null)
                         .WithMany()
                         .HasForeignKey("OwnerUserId");

@@ -9,6 +9,8 @@ using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Form;
 using Ftl.SalesCrm.UserInfo;
 using System.Linq;
 using System.ComponentModel.DataAnnotations;
+using Ftl.SalesCrm.Lifecyclestages;
+using Volo.Abp.Application.Dtos;
 
 namespace Ftl.SalesCrm.Web.Pages.Contacts
 {
@@ -18,18 +20,32 @@ namespace Ftl.SalesCrm.Web.Pages.Contacts
         public CreateContactViewModel Contact { get; set; }
 
         public List<SelectListItem> UserList { get; set; }
+        public List<SelectListItem> LifecyclestageList { get; set; }
         public IList<PotentialOwnerUserDto> PotentialOwnerUserList { get; set; }
 
         private readonly IContactAppService _contactService;
-
-        public CreateModalModel(IContactAppService contactService)
+        private readonly ILifecyclestageAppService _lifecyclestageAppService;
+        public CreateModalModel(IContactAppService contactService, ILifecyclestageAppService lifecyclestageAppService)
         {
             _contactService = contactService;
+            _lifecyclestageAppService = lifecyclestageAppService;
         }
 
-        public async void OnGet()
+        public async Task OnGet()
         {
             PotentialOwnerUserList = await _contactService.GetPotentialOwnerUserListAsync();
+            var LifecyclestageItems = await _lifecyclestageAppService.GetListAsync(new PagedAndSortedResultRequestDto());
+            // order by id
+            var LifecyclestageItemsOrdered = LifecyclestageItems.Items.OrderBy(x => x.CreationTime);
+
+            LifecyclestageList = new List<SelectListItem>();
+
+            LifecyclestageList.AddRange(LifecyclestageItemsOrdered.Select(u => new SelectListItem()
+            {
+                Value = u.Id.ToString(),
+                Text = u.Name,
+            }).ToList());
+
 
             UserList = new List<SelectListItem>()
             {
@@ -68,7 +84,9 @@ namespace Ftl.SalesCrm.Web.Pages.Contacts
             [SelectItems(nameof(UserList))]
             public string OwnerUserName { get; set; }
             public string Phone { get; set; }
-            public string Lifecyclestage { get; set; }
+            [Display(Name = "Lifecyclestage")]
+            [SelectItems(nameof(LifecyclestageList))]
+            public string LifecyclestageId { get; set; }
             // Sales properties
             public string Leadstatus { get; set; }
         }
