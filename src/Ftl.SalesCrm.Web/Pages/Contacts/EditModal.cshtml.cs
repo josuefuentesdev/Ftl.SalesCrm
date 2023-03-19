@@ -12,6 +12,7 @@ using Volo.Abp.Application.Dtos;
 using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Form;
 using static Ftl.SalesCrm.Web.Pages.Contacts.CreateModalModel;
 using Volo.Abp.ObjectMapping;
+using Ftl.SalesCrm.LeadStatuses;
 
 namespace Ftl.SalesCrm.Web.Pages.Contacts
 {
@@ -23,15 +24,21 @@ namespace Ftl.SalesCrm.Web.Pages.Contacts
         private readonly IContactAppService _contactAppService;
         public List<SelectListItem> UserList { get; set; }
         public List<SelectListItem> LifecyclestageList { get; set; }
+        public List<SelectListItem> LeadStatusList { get; set; }
 
         private readonly IContactAppService _contactService;
         private readonly ILifecyclestageAppService _lifecyclestageAppService;
+        private readonly ILeadStatusAppService _leadStatusAppService;
 
-        public EditModalModel(IContactAppService contactAppService, IContactAppService contactService, ILifecyclestageAppService lifecyclestageAppService)
+        public EditModalModel(IContactAppService contactAppService,
+                              IContactAppService contactService,
+                              ILifecyclestageAppService lifecyclestageAppService,
+                              ILeadStatusAppService leadStatusAppService)
         {
             _contactAppService = contactAppService;
             _contactService = contactService;
             _lifecyclestageAppService = lifecyclestageAppService;
+            _leadStatusAppService = leadStatusAppService;
         }
 
         public async Task OnGetAsync(int id)
@@ -48,6 +55,15 @@ namespace Ftl.SalesCrm.Web.Pages.Contacts
                 Text = u.Name,
             }).ToList();
 
+
+            var LeadstatusItems = (await _leadStatusAppService.GetListAsync(new PagedAndSortedResultRequestDto()))
+                .Items.OrderBy(x => x.CreationTime);
+            LeadStatusList = LeadstatusItems.Select(u => new SelectListItem()
+            {
+                Value = u.Id.ToString(),
+                Text = u.Label,
+            }).ToList();
+            
 
             var PotentialOwnerUserList = await _contactService.GetPotentialOwnerUserListAsync();
             UserList = new()
@@ -97,7 +113,9 @@ namespace Ftl.SalesCrm.Web.Pages.Contacts
             [SelectItems(nameof(LifecyclestageList))]
             public string LifecyclestageId { get; set; }
             // Sales properties
-            public string Leadstatus { get; set; }
+            [Display(Name = "LeadStatus")]
+            [SelectItems(nameof(LeadStatusList))]
+            public string LeadStatusId { get; set; }
         }
     }
 }

@@ -11,6 +11,7 @@ using System.Linq;
 using System.ComponentModel.DataAnnotations;
 using Ftl.SalesCrm.Lifecyclestages;
 using Volo.Abp.Application.Dtos;
+using Ftl.SalesCrm.LeadStatuses;
 
 namespace Ftl.SalesCrm.Web.Pages.Contacts
 {
@@ -21,28 +22,38 @@ namespace Ftl.SalesCrm.Web.Pages.Contacts
 
         public List<SelectListItem> UserList { get; set; }
         public List<SelectListItem> LifecyclestageList { get; set; }
+        public List<SelectListItem> LeadStatusList { get; set; }
 
         private readonly IContactAppService _contactService;
         private readonly ILifecyclestageAppService _lifecyclestageAppService;
-        public CreateModalModel(IContactAppService contactService, ILifecyclestageAppService lifecyclestageAppService)
+        private readonly ILeadStatusAppService _leadStatusAppService;
+        public CreateModalModel(IContactAppService contactService, ILifecyclestageAppService lifecyclestageAppService, ILeadStatusAppService leadStatusAppService)
         {
             _contactService = contactService;
             _lifecyclestageAppService = lifecyclestageAppService;
+            _leadStatusAppService = leadStatusAppService;
         }
 
         public async Task OnGet()
         {
-            var LifecyclestageItems = await _lifecyclestageAppService.GetListAsync(new PagedAndSortedResultRequestDto());
-            var LifecyclestageItemsOrdered = LifecyclestageItems.Items.OrderBy(x => x.CreationTime);
+            var LifecyclestageItems = (await _lifecyclestageAppService.GetListAsync(new PagedAndSortedResultRequestDto()))
+                .Items.OrderBy(x => x.CreationTime);
 
-            LifecyclestageList = LifecyclestageItemsOrdered.Select(u => new SelectListItem()
+            LifecyclestageList = LifecyclestageItems.Select(u => new SelectListItem()
             {
                 Value = u.Id.ToString(),
                 Text = u.Name,
             }).ToList();
 
+            var LeadstatusItems = (await _leadStatusAppService.GetListAsync(new PagedAndSortedResultRequestDto()))
+                .Items.OrderBy(x => x.CreationTime);
+            LeadStatusList = LeadstatusItems.Select(u => new SelectListItem()
+            {
+                Value = u.Id.ToString(),
+                Text = u.Label,
+            }).ToList();
 
-            var PotentialOwnerUserList = await _contactService.GetPotentialOwnerUserListAsync();
+            var PotentialOwnerUserList = (await _contactService.GetPotentialOwnerUserListAsync());
             UserList = new()
             {
                 new SelectListItem()
@@ -85,7 +96,9 @@ namespace Ftl.SalesCrm.Web.Pages.Contacts
             [SelectItems(nameof(LifecyclestageList))]
             public string LifecyclestageId { get; set; }
             // Sales properties
-            public string Leadstatus { get; set; }
+            [Display(Name = "LeadStatus")]
+            [SelectItems(nameof(LeadStatusList))]
+            public string LeadStatusId { get; set; }
         }
     }
 }

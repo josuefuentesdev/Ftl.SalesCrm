@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Ftl.SalesCrm.Contacts;
+using Ftl.SalesCrm.LeadStatuses;
 using Ftl.SalesCrm.Lifecyclestages;
 using Ftl.SalesCrm.UserInfo;
 using Volo.Abp.Identity;
@@ -20,6 +21,9 @@ public class SalesCrmApplicationAutoMapperProfile : Profile
 
         CreateMap<Lifecyclestage, LifecyclestageDto>();
         CreateMap<CreateUpdateLifecyclestageDto, Lifecyclestage>();
+
+        CreateMap<LeadStatus, LeadStatusDto>();
+        CreateMap<CreateUpdateLeadStatusDto, LeadStatus>();
 
     }
 }
