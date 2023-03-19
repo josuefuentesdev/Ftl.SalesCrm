@@ -46,6 +46,10 @@ $(function () {
                     data: "lifecyclestageName"
                 },
                 {
+                    title: l('OwnerUserName'),
+                    data: "ownerUserName"
+                },
+                {
                     title: l('Firstname'),
                     data: "firstname"
                 },

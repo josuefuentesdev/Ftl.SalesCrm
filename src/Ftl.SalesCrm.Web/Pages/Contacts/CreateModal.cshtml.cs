@@ -21,7 +21,6 @@ namespace Ftl.SalesCrm.Web.Pages.Contacts
 
         public List<SelectListItem> UserList { get; set; }
         public List<SelectListItem> LifecyclestageList { get; set; }
-        public IList<PotentialOwnerUserDto> PotentialOwnerUserList { get; set; }
 
         private readonly IContactAppService _contactService;
         private readonly ILifecyclestageAppService _lifecyclestageAppService;
@@ -33,7 +32,6 @@ namespace Ftl.SalesCrm.Web.Pages.Contacts
 
         public async Task OnGet()
         {
-            PotentialOwnerUserList = await _contactService.GetPotentialOwnerUserListAsync();
             var LifecyclestageItems = await _lifecyclestageAppService.GetListAsync(new PagedAndSortedResultRequestDto());
             // order by id
             var LifecyclestageItemsOrdered = LifecyclestageItems.Items.OrderBy(x => x.CreationTime);
@@ -47,6 +45,7 @@ namespace Ftl.SalesCrm.Web.Pages.Contacts
             }).ToList());
 
 
+            var PotentialOwnerUserList = await _contactService.GetPotentialOwnerUserListAsync();
             UserList = new List<SelectListItem>()
             {
                 new SelectListItem()
@@ -67,6 +66,7 @@ namespace Ftl.SalesCrm.Web.Pages.Contacts
             var dto = ObjectMapper.Map<CreateContactViewModel, CreateUpdateContactDto>(Contact);
             if (!String.IsNullOrEmpty(Contact.OwnerUserName))
             {
+                var PotentialOwnerUserList = await _contactService.GetPotentialOwnerUserListAsync();
                 var potentialUserId = PotentialOwnerUserList.Where(p => p.UserName == Contact.OwnerUserName).FirstOrDefault()?.Id;
                 if (potentialUserId is Guid) dto.OwnerUserId = potentialUserId;
             }

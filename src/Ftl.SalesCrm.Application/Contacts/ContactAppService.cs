@@ -10,6 +10,7 @@ using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Identity;
+using Volo.Abp.Users;
 
 namespace Ftl.SalesCrm.Contacts
 {
@@ -79,6 +80,17 @@ namespace Ftl.SalesCrm.Contacts
 
             //Get the total count with another query
             var totalCount = await Repository.GetCountAsync();
+
+            // Get the OwnerUserName from the identity UserName
+            var users = await UserRepository.GetListAsync();
+            foreach (var contactDto in contactDtos)
+            {
+                var user = users.FirstOrDefault(x => x.Id == contactDto.OwnerUserId);
+                if (user != null)
+                {
+                    contactDto.OwnerUserName = user.UserName;
+                }
+            }
 
             return new PagedResultDto<ContactDto>(
                 totalCount,
