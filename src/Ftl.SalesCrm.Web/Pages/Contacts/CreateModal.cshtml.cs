@@ -33,20 +33,17 @@ namespace Ftl.SalesCrm.Web.Pages.Contacts
         public async Task OnGet()
         {
             var LifecyclestageItems = await _lifecyclestageAppService.GetListAsync(new PagedAndSortedResultRequestDto());
-            // order by id
             var LifecyclestageItemsOrdered = LifecyclestageItems.Items.OrderBy(x => x.CreationTime);
 
-            LifecyclestageList = new List<SelectListItem>();
-
-            LifecyclestageList.AddRange(LifecyclestageItemsOrdered.Select(u => new SelectListItem()
+            LifecyclestageList = LifecyclestageItemsOrdered.Select(u => new SelectListItem()
             {
                 Value = u.Id.ToString(),
                 Text = u.Name,
-            }).ToList());
+            }).ToList();
 
 
             var PotentialOwnerUserList = await _contactService.GetPotentialOwnerUserListAsync();
-            UserList = new List<SelectListItem>()
+            UserList = new()
             {
                 new SelectListItem()
                 {
